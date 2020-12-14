@@ -1,0 +1,20 @@
+version: '3.7'
+
+services:
+  searx:
+    image: searx/searx
+    container_name: searx
+    restart: always
+    environment:
+      - 'BASE_URL=https://searx.awoo.moe/'
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.searx.rule=Host(`searx.awoo.moe`)"
+      - "traefik.http.routers.searx.tls=true"
+      - "traefik.http.routers.searx.tls.certresolver=le"
+    networks:
+      - internal
+
+networks:
+  internal:
+    external: true

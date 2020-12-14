@@ -1,0 +1,32 @@
+version: "3"
+services:
+  nextcloud:
+    image: nextcloud:apache
+    container_name: nextcloud
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.cloud.rule=Host(`cloud.awoo.moe`)"
+      - "traefik.http.routers.cloud.tls=true"
+      - "traefik.http.routers.cloud.tls.certresolver=le"
+    networks:
+      - internal
+    volumes:
+      - ./data/nextcloud/:/var/www/html
+      - /etc/localtime:/etc/localtime:ro
+      
+  db:
+    image: postgres
+    container_name: postgres
+    restart: always
+    hostname: db
+    volumes:
+      - ./data/mariadb/:/var/lib/postgresql/data
+    env_file:
+      - db.env
+    networks:
+      - internal
+
+networks:
+  internal:
+    external: true
